@@ -1,0 +1,13 @@
+**
+!dist/extension.js
+!dist/launch.js
+!media/**
+!images/hero-dark.png
+!images/terminal-dark.png
+!walkthrough/**
+!samples/**
+!package.json
+!README.md
+!CHANGELOG.md
+!LICENSE
+!icon.png

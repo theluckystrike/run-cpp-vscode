@@ -1,0 +1,506 @@
+{
+  "name": "zovo-run-cpp",
+  "displayName": "Run C++ and C Code: One-Click Compile with GCC, G++, Clang (CPP Runner, Input Panel)",
+  "description": "Run C++ and C code with one click: compile and run the current file with gcc, g++, clang or clang++. Interactive input in the terminal, an Input panel with saved test cases and diffs, errors in Problems, Stop for endless loops, per-file flags. Free, no sign-in, works offline.",
+  "version": "0.1.0",
+  "publisher": "zovo",
+  "license": "MIT",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#1B2433",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Other"
+  ],
+  "keywords": [
+    "run c++",
+    "run c",
+    "cpp runner",
+    "c runner",
+    "compile and run",
+    "compile c++",
+    "c compiler",
+    "c++ compiler",
+    "gcc",
+    "g++",
+    "clang",
+    "mingw",
+    "run c program",
+    "code runner",
+    "competitive programming",
+    "test cases",
+    "input",
+    "stdin",
+    "offline"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:c",
+    "onLanguage:cpp"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "Building and running code needs a trusted workspace."
+    },
+    "virtualWorkspaces": false
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "zovoRun.run",
+        "title": "Run C/C++ File",
+        "category": "Run C++",
+        "icon": "$(play)"
+      },
+      {
+        "command": "zovoRun.stop",
+        "title": "Stop Program",
+        "category": "Run C++",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "zovoRun.build",
+        "title": "Build Only (Compile, Don't Run)",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.runOnly",
+        "title": "Run Last Build (Don't Compile)",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.debug",
+        "title": "Debug C/C++ File",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.runFolder",
+        "title": "Build and Run All Files in This Folder",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.openInputPanel",
+        "title": "Run with Input & Test Cases",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.runTests",
+        "title": "Run All Test Cases",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.stressTest",
+        "title": "Stress Test Against a Reference Solution",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.benchmark",
+        "title": "Benchmark (Run 10 Times)",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.selectCompiler",
+        "title": "Pick Compiler (gcc, g++, clang, clang++)",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.showSetup",
+        "title": "Compiler Setup Guide",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.clean",
+        "title": "Delete Built Programs",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.openBinaryInHex",
+        "title": "Open Built Program in Hex Viewer",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.openLinkerMap",
+        "title": "Open Linker Map File",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.showOutput",
+        "title": "Show Build Output",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.openSample",
+        "title": "Open a Sample Program",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.openWalkthrough",
+        "title": "Get Started",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.supportDeveloper",
+        "title": "Support the developer",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.moreViewers",
+        "title": "More free tools",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.unlockWithSponsors",
+        "title": "Unlock Zovo Pro with GitHub Sponsors",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.getPro",
+        "title": "Get Zovo Pro (USD 19 once, all Zovo extensions)",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.enterLicenseKey",
+        "title": "Enter Zovo Pro license key",
+        "category": "Run C++"
+      },
+      {
+        "command": "zovoRun.removeLicense",
+        "title": "Remove Zovo Pro license from this editor",
+        "category": "Run C++"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "zovoRun.run",
+        "key": "ctrl+alt+enter",
+        "mac": "cmd+alt+enter",
+        "when": "editorTextFocus && resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i && !zovoRun.running"
+      },
+      {
+        "command": "zovoRun.stop",
+        "key": "ctrl+alt+enter",
+        "mac": "cmd+alt+enter",
+        "when": "editorTextFocus && resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i && zovoRun.running"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "zovoRun.run",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i && !zovoRun.running",
+          "group": "navigation@1"
+        },
+        {
+          "command": "zovoRun.stop",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i && zovoRun.running",
+          "group": "navigation@1"
+        },
+        {
+          "command": "zovoRun.openInputPanel",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "1_zovoRun@1"
+        },
+        {
+          "command": "zovoRun.build",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "1_zovoRun@2"
+        },
+        {
+          "command": "zovoRun.debug",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "1_zovoRun@3"
+        },
+        {
+          "command": "zovoRun.runFolder",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "1_zovoRun@4"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "zovoRun.run",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "navigation@9"
+        },
+        {
+          "command": "zovoRun.runFolder",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "navigation@10"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "zovoRun.run",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "navigation@1"
+        },
+        {
+          "command": "zovoRun.openInputPanel",
+          "when": "resourceExtname =~ /^\\.(c|cc|cpp|cxx|c\\+\\+)$/i",
+          "group": "navigation@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "zovoRun.stop",
+          "when": "zovoRun.running"
+        },
+        {
+          "command": "zovoRun.unlockWithSponsors",
+          "when": "zovoRun.proEnabled"
+        },
+        {
+          "command": "zovoRun.getPro",
+          "when": "zovoRun.proEnabled"
+        },
+        {
+          "command": "zovoRun.enterLicenseKey",
+          "when": "zovoRun.proEnabled"
+        },
+        {
+          "command": "zovoRun.removeLicense",
+          "when": "zovoRun.proEnabled"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "zovoRun",
+          "title": "Run C++",
+          "icon": "media/panel-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "zovoRun": [
+        {
+          "type": "webview",
+          "id": "zovoRun.inputPanel",
+          "name": "Input & Tests"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Run C++",
+      "properties": {
+        "zovoRun.cppCompiler": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "C++ compiler: a name on PATH (`g++`, `clang++`, `g++-14`) or a full path. Empty: automatic (g++, then clang++, on PATH and in the usual MSYS2, WinLibs and MinGW folders)."
+        },
+        "zovoRun.cCompiler": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "C compiler: a name on PATH (`gcc`, `clang`) or a full path. Empty: automatic."
+        },
+        "zovoRun.preferredCompiler": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "gcc",
+            "clang"
+          ],
+          "default": "auto",
+          "description": "Which compiler family to try first when the compiler settings are empty."
+        },
+        "zovoRun.cppFlags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "-std=c++20",
+            "-Wall",
+            "-Wextra",
+            "-g",
+            "-O0"
+          ],
+          "markdownDescription": "Flags for C++ files. A `// run: -O2` line at the top of a file adds flags for that file only (they come last, so they win)."
+        },
+        "zovoRun.cFlags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "-std=c17",
+            "-Wall",
+            "-Wextra",
+            "-g",
+            "-O0"
+          ],
+          "description": "Flags for C files."
+        },
+        "zovoRun.linkFlags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "markdownDescription": "Flags for linking, for example `-lpthread` or `-static`."
+        },
+        "zovoRun.linkMath": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Link C programs with the math library (`-lm`), so `sqrt` and `pow` work on Linux."
+        },
+        "zovoRun.outputFolder": {
+          "type": "string",
+          "enum": [
+            "workspace",
+            "temp"
+          ],
+          "enumDescriptions": [
+            "In .zovo-run/bin in the workspace folder (with its own .gitignore)",
+            "In the system temp folder"
+          ],
+          "default": "workspace",
+          "description": "Where built programs go."
+        },
+        "zovoRun.saveBeforeRun": {
+          "type": "boolean",
+          "default": true,
+          "description": "Save the file (and in folder mode all files) before building."
+        },
+        "zovoRun.focusTerminal": {
+          "type": "boolean",
+          "default": true,
+          "description": "Put the keyboard focus in the terminal when a program starts, so you can type its input."
+        },
+        "zovoRun.revealProblems": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Problems panel when a build fails."
+        },
+        "zovoRun.writeLaunchJson": {
+          "type": "boolean",
+          "default": true,
+          "description": "Debug adds one entry for the file to .vscode/launch.json (it never changes other entries or settings)."
+        },
+        "zovoRun.timeLimitSeconds": {
+          "type": "number",
+          "default": 10,
+          "minimum": 0,
+          "description": "Time limit for runs in the Input panel and for test cases. 0 means no limit. Programs in the terminal have no limit (use Stop)."
+        },
+        "zovoRun.maxCapturedOutputMB": {
+          "type": "number",
+          "default": 32,
+          "minimum": 1,
+          "maximum": 512,
+          "description": "Output kept per run in the Input panel. More output is counted, not kept, so the editor stays fast."
+        },
+        "zovoRun.compareMode": {
+          "type": "string",
+          "enum": [
+            "trim",
+            "exact",
+            "tokens"
+          ],
+          "enumDescriptions": [
+            "Ignore spaces at line ends and empty lines at the end",
+            "Byte for byte (line endings normalized)",
+            "Compare words only, any whitespace"
+          ],
+          "default": "trim",
+          "description": "How test case output is compared with the expected output."
+        },
+        "zovoRun.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Run and Stop in the status bar for C and C++ files."
+        },
+        "zovoRun.askForRating": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ask for a Marketplace rating after 2 good runs, in 2 sessions at least 4 hours apart. \"Later\" asks once more after 7 days, \"No thanks\" never asks again. Never after an error. Nothing is sent anywhere."
+        },
+        "zovoRun.showSupportLinks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the small Rate, More free tools and Sponsor links at the bottom of the Input & Tests panel. Nothing is sent anywhere."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "zovoRun.start",
+        "title": "Get started with Run C++ and C Code",
+        "description": "Compile and run C and C++ files with one click, with input and test cases.",
+        "steps": [
+          {
+            "id": "run",
+            "title": "Run a file",
+            "description": "Open a .c or .cpp file and click the Run button at the top right of the editor (or press Ctrl+Alt+Enter, Cmd+Alt+Enter on Mac). The program runs in the terminal, so scanf and cin work.\n[Open a Sample](command:zovoRun.openSample)",
+            "media": {
+              "image": "images/terminal-dark.png",
+              "altText": "A C++ program running in the terminal with its exit code, run time and peak memory."
+            },
+            "completionEvents": [
+              "onCommand:zovoRun.run"
+            ]
+          },
+          {
+            "id": "input",
+            "title": "Input and test cases",
+            "description": "Type input in the Input & Tests panel, run, and save it as a test case. Saved cases show pass or fail with a diff.\n[Open the Input Panel](command:zovoRun.openInputPanel)",
+            "media": {
+              "markdown": "walkthrough/input.md"
+            },
+            "completionEvents": [
+              "onCommand:zovoRun.openInputPanel"
+            ]
+          },
+          {
+            "id": "flags",
+            "title": "Flags for one file",
+            "description": "A comment at the top sets flags and arguments for that file only: // run: -O2 -lm and // args: \"Hello World\" 3",
+            "media": {
+              "markdown": "walkthrough/flags.md"
+            }
+          },
+          {
+            "id": "setup",
+            "title": "Compiler setup",
+            "description": "gcc, g++, clang and clang++ are found on PATH and in the usual MSYS2, WinLibs and MinGW folders. Nothing is downloaded.\n[Compiler Setup Guide](command:zovoRun.showSetup)\n[Pick Compiler](command:zovoRun.selectCompiler)",
+            "media": {
+              "markdown": "walkthrough/setup.md"
+            },
+            "completionEvents": [
+              "onCommand:zovoRun.showSetup",
+              "onCommand:zovoRun.selectCompiler"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node scripts/build.js --production",
+    "test": "node scripts/build.js --production && node --test --test-concurrency=1 test/*.test.js",
+    "package": "npm run build && npx -y @vscode/vsce package --no-dependencies --no-gitHubIssueLinking -o dist/"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "@types/vscode": "~1.90.0"
+  },
+  "homepage": "https://github.com/theluckystrike/run-cpp-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/theluckystrike/run-cpp-vscode/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theluckystrike/run-cpp-vscode"
+  },
+  "sponsor": {
+    "url": "https://github.com/sponsors/theluckystrike"
+  }
+}
