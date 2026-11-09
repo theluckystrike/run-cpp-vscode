@@ -202,6 +202,7 @@ async function build(plan, { force = false, quiet = false } = {}) {
       if (pd.count) vscode.commands.executeCommand('workbench.actions.view.problems', { preserveFocus: true });
       else out.show(true);
     }
+    rating.failure(); // no rating ask in a session where a build failed, nor for 24 hours after it
     return { ok: false, compileError: (res.output || '').trim() || 'The build failed.' };
   }
   out.appendLine(`Built in ${P.formatMs(res.ms)}${pd.count ? `, ${pd.count} warning${pd.count === 1 ? '' : 's'} (see Problems)` : ''}: ${plan.binary}`);
@@ -258,6 +259,7 @@ async function runInTerminal(plan) {
   setRunning(null);
   const st = rec.result;
   if (st && st.exit && st.exit.ok) rating.success(vscode.Uri.file(plan.file));
+  else if (st && st.signal && !st.stopped) rating.failure(); // crashed (not stopped by the user): no ask
   return st;
 }
 
@@ -514,6 +516,7 @@ class InputPanel {
     s.last = this.summary(r);
     this.push();
     if (r.exit.ok) rating.success(vscode.Uri.file(this.file));
+    else if (r.signal && !r.stopped && !r.timedOut) rating.failure(); // crashed: no ask
     return r;
   }
   async runTests(ids) {

@@ -54,3 +54,12 @@ test('README first screen says free, no sign-in, works offline and shows a real 
   assert.match(r, /free, no sign-in, works offline/i);
   assert.match(r, /!\[[^\]]+\]\(images\/[\w-]+\.png\)/);
 });
+
+test('rating ask: a failed build and a crashed run count as failures (no ask in that session or for 24 h)', () => {
+  const src = fs.readFileSync(path.join(root, 'src', 'extension.js'), 'utf8');
+  const build = src.slice(src.indexOf('async function build('), src.indexOf('// ---------- run in the terminal'));
+  assert.match(build, /if \(!res\.ok\) \{[\s\S]*rating\.failure\(\);[\s\S]*return \{ ok: false/);
+  const term = src.slice(src.indexOf('async function runInTerminal('), src.indexOf('// ---------- commands'));
+  assert.match(term, /else if \(st && st\.signal && !st\.stopped\) rating\.failure\(\)/);
+  assert.match(src, /else if \(r\.signal && !r\.stopped && !r\.timedOut\) rating\.failure\(\)/);
+});
