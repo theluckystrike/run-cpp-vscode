@@ -50,6 +50,30 @@ test('reads 3 lines of input; C++20 compiles with the default flags', async (t) 
   assert.equal(r.run.stdout, 'c\nb\na\n');
 });
 
+test('a file name that starts with "-" is a file, not a compiler option (single and folder builds; Problems path maps back)', async (t) => {
+  if (!cc) return t.skip('no compiler');
+  const src = '#include <stdio.h>\nint main(void){ puts("dash ok"); return 0; }\n';
+  for (const name of ['-DX.c', '--version.c', '-o.c']) {
+    const r = await buildRun(put(path.join('dash', name), src));
+    assert.ok(r.build.ok, name + ': ' + r.build.output);
+    assert.equal(r.run.stdout, 'dash ok\n', name);
+    assert.ok(r.plan.steps[0].args.includes('.' + path.sep + name), r.plan.steps[0].args.join(' '));
+    assert.ok(!r.plan.steps[0].args.includes(name));
+  }
+  const bad = put(path.join('dash2', '-bad.c'), 'int main(void){ return nope; }\n');
+  const b = await buildRun(bad);
+  assert.equal(b.build.ok, false);
+  const d = D.parse(b.build.output).filter((x) => x.severity === 'error');
+  assert.ok(d.length > 0, b.build.output);
+  assert.equal(D.resolvePath(d[0].file, b.plan.cwd, b.plan.sources, fs.existsSync), bad);
+  const helper = put(path.join('dash3', '-helper.c'), 'int helper(void){ return 41; }\n');
+  const main = put(path.join('dash3', 'main.c'), '#include <stdio.h>\nint helper(void);\nint main(void){ printf("%d\\n", helper() + 1); return 0; }\n');
+  const f = await buildRun(main, { folder: true });
+  assert.ok(f.build.ok, f.build.output);
+  assert.equal(f.run.stdout, '42\n');
+  assert.ok(fs.existsSync(helper));
+});
+
 test('per-file flags and arguments with spaces (// run: and // args:)', async (t) => {
   if (!cc) return t.skip('no compiler');
   const r = await buildRun(put('flags.cpp', '// run: -O2 -DFOO=7\n// args: "Hello World" 2\n#include <cstdio>\nint main(int argc, char** argv){ std::printf("%d|%s|%s|%d\\n", argc, argv[1], argv[2], FOO); }\n'));

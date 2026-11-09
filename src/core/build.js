@@ -63,7 +63,12 @@ function plan(opts) {
   const link = (opts.flags && opts.flags.link) || [];
   const always = ['-fdiagnostics-color=never', '-fmessage-length=0'];
   const mathLib = langs.has('c') && opts.linkMath !== false && !link.includes('-lm') && !extra.flags.includes('-lm') ? ['-lm'] : [];
-  const rel = (s) => (path.dirname(s) === cwd ? path.basename(s) : s);
+  // A file next to the main file goes in by name; a name that starts with '-' gets './' so the compiler never reads it as an option.
+  const rel = (s) => {
+    if (path.dirname(s) !== cwd) return s;
+    const b = path.basename(s);
+    return b.startsWith('-') ? '.' + path.sep + b : b;
+  };
   const steps = [];
   if (langs.size > 1) {
     // mixed C and C++: compile each file to an object with its own compiler, then link with the C++ compiler
